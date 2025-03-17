@@ -8,14 +8,16 @@ export default {
     if (message.author.bot) return;
 
     if (message.content.includes(":nare_coin:")) {
-      const mentions = message.mentions.users;
+      const userMentions = message.mentions.users;
+      const roleMentions = message.mentions.roles;
 
-      if (mentions.size === 0) {
+      if (userMentions.size === 0 && roleMentions.size === 0) {
         await message.reply("あれなんかおかしいぞ、もう一度試してみよう！");
         return;
       }
 
-      mentions.forEach(async (mentionedUser) => {
+      // Process user mentions
+      userMentions.forEach(async (mentionedUser) => {
         if (mentionedUser.id !== message.author.id) {
           try {
             recordBonus(message.author.id, mentionedUser.id, message.id);
@@ -27,6 +29,35 @@ export default {
           } catch (error) {
             logger.error(message.author.id, `Failed to record bonus: ${error}`);
           }
+        }
+      });
+
+      // Process role mentions
+      roleMentions.forEach(async (role) => {
+        const membersWithRole = message.guild?.members.cache.filter(
+          (member) =>
+            member.roles.cache.has(role.id) && member.id !== message.author.id
+        );
+
+        membersWithRole?.forEach(async (member) => {
+          try {
+            recordBonus(message.author.id, member.id, message.id);
+            logger.info(
+              message.author.id,
+              `Recorded bonus from ${message.author.username} to ${member.user.username} (role: ${role.name})`
+            );
+          } catch (error) {
+            logger.error(
+              message.author.id,
+              `Failed to record bonus for role member: ${error}`
+            );
+          }
+        });
+
+        if (membersWithRole && membersWithRole.size > 0) {
+          await message.reply(
+            `<@${message.author.id}> さんロール ${role.name} のメンバー全員を記録しました！`
+          );
         }
       });
     }
