@@ -43,7 +43,6 @@ export default {
         if (mentionedUser.id !== message.author.id) {
           try {
             recordBonus(message.author.id, mentionedUser.id, message.id);
-            await message.reply(`<@${message.author.id}> さん記録しました！`);
             logger.info(
               message.author.id,
               `Recorded bonus from ${message.author.username} to ${mentionedUser.username}`
@@ -53,6 +52,10 @@ export default {
           }
         }
       });
+
+      if (userMentions) {
+        await message.reply(`<@${message.author.id}> さん記録しました！`);
+      }
 
       // Process role mentions
       roleMentions.forEach(async (role) => {
