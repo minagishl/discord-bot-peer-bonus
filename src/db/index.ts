@@ -25,7 +25,7 @@ export function recordBonus(
   stmt.run(senderId, receiverId, messageId);
 }
 
-interface StatRecord {
+export interface StatRecord {
   receiver_id: string;
   sender_id: string;
   count: number;

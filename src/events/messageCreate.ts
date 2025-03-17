@@ -1,11 +1,27 @@
-import { Message } from "discord.js";
-import { recordBonus } from "../db";
+import { Message, PermissionFlagsBits } from "discord.js";
+import { recordBonus, getWeeklyStats } from "../db";
+import { generateWeeklyReport } from "../utils/generateWeeklyReport";
 import logger from "../utils/logger";
 
 export default {
   name: "messageCreate",
   async execute(message: Message) {
     if (message.author.bot) return;
+
+    // Handle weekly stats request
+    if (message.mentions.has(message.client.user)) {
+      // Check if user has administrator permission
+      const member = message.member;
+      if (member?.permissions.has(PermissionFlagsBits.Administrator)) {
+        const stats = getWeeklyStats();
+
+        // Generate and send report as DM
+        const reportMessage = await generateWeeklyReport(message.client, stats);
+        await message.author.send(reportMessage);
+        await message.reply("ウィークリーレポートをDMで送信しました！");
+        return;
+      }
+    }
 
     if (message.content.includes(":nare_coin:")) {
       const userMentions = message.mentions.users;
