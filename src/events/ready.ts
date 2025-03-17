@@ -17,6 +17,12 @@ async function postWeeklyStats(client: Client) {
       return;
     }
 
+    const emojiId = process.env.EMOJI_ID;
+    if (!emojiId) {
+      console.error("Emoji ID is not set");
+      return;
+    }
+
     // Create main message and thread
     const mainMessage = await channel.send(
       "こんにちは！\n今週も皆さんお疲れ様でした :tada:\n\n今週のピアボーナスの結果をスレッドに投稿しました！\nご覧ください！"
@@ -43,7 +49,7 @@ async function postWeeklyStats(client: Client) {
         } catch (error) {
           console.error(`Failed to fetch user ${stat.receiver_id}: ${error}`);
         }
-        return `${index + 1}位: ${username} さん（ :nare_coin: ✕ ${
+        return `${index + 1}位: ${username} さん（ <:nare_coin:${emojiId}> ✕ ${
           stat.count
         }）`;
       })
@@ -61,7 +67,7 @@ async function postWeeklyStats(client: Client) {
         } catch (error) {
           console.error(`Failed to fetch user ${stat.sender_id}: ${error}`);
         }
-        return `${index + 1}位: ${username} さん（ :nare_coin: ✕ ${
+        return `${index + 1}位: ${username} さん（ <:nare_coin:${emojiId}> ✕ ${
           stat.count
         }）`;
       })
