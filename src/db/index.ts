@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 
 // Initialize database
-const db = new Database("peer-bonus.db");
+const db = new Database("data/peer-bonus.db");
 
 // Create tables if they don't exist
 db.exec(`
