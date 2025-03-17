@@ -11,6 +11,28 @@ export default {
       const userMentions = message.mentions.users;
       const roleMentions = message.mentions.roles;
 
+      // Check for replies
+      if (message.reference) {
+        const repliedMessage = await message.fetchReference();
+        if (repliedMessage.author.id !== message.author.id) {
+          try {
+            recordBonus(
+              message.author.id,
+              repliedMessage.author.id,
+              message.id
+            );
+            await message.reply(`<@${message.author.id}> さん記録しました！`);
+            logger.info(
+              message.author.id,
+              `Recorded bonus from ${message.author.username} to ${repliedMessage.author.username} (via reply)`
+            );
+          } catch (error) {
+            logger.error(message.author.id, `Failed to record bonus: ${error}`);
+          }
+          return;
+        }
+      }
+
       if (userMentions.size === 0 && roleMentions.size === 0) {
         await message.reply("あれなんかおかしいぞ、もう一度試してみよう！");
         return;
