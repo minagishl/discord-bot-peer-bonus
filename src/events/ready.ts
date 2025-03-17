@@ -99,7 +99,7 @@ export default {
 
     // Schedule weekly stats post for Monday 9:00 AM JST
     cron.schedule(
-      "* * * * *",
+      "0 9 * * 1",
       () => {
         void postWeeklyStats(client);
       },
