@@ -49,13 +49,22 @@ export default {
         }
       }
 
-      if (userMentions.size === 0 && roleMentions.size === 0) {
+      // Check for self-mention or no mentions
+      if (
+        (userMentions.size === 0 && roleMentions.size === 0) ||
+        (userMentions.size === 1 &&
+          roleMentions.size === 0 &&
+          userMentions.has(message.author.id))
+      ) {
         await message.reply("あれなんかおかしいぞ、もう一度試してみよう！");
         return;
       }
 
       // Process user mentions
-      userMentions.forEach(async (mentionedUser) => {
+      let validMentionsProcessed = false;
+
+      // Process user mentions
+      for (const mentionedUser of userMentions.values()) {
         if (mentionedUser.id !== message.author.id) {
           try {
             recordBonus(message.author.id, mentionedUser.id, message.id);
@@ -63,18 +72,15 @@ export default {
               message.author.id,
               `Recorded bonus from ${message.author.username} to ${mentionedUser.username}`
             );
+            validMentionsProcessed = true;
           } catch (error) {
             logger.error(message.author.id, `Failed to record bonus: ${error}`);
           }
         }
-      });
-
-      if (userMentions) {
-        await message.reply(`<@${message.author.id}> さん記録しました！`);
       }
 
       // Process role mentions
-      roleMentions.forEach(async (role) => {
+      for (const role of roleMentions.values()) {
         const membersWithRole = message.guild?.members.cache.filter(
           (member) =>
             member.roles.cache.has(role.id) && member.id !== message.author.id
@@ -96,11 +102,16 @@ export default {
         });
 
         if (membersWithRole && membersWithRole.size > 0) {
+          validMentionsProcessed = true;
           await message.reply(
             `<@${message.author.id}> さんロール ${role.name} のメンバー全員を記録しました！`
           );
         }
-      });
+      }
+
+      if (validMentionsProcessed) {
+        await message.reply(`<@${message.author.id}> さん記録しました！`);
+      }
     }
   },
 };
