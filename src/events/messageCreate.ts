@@ -30,7 +30,10 @@ export default {
       // Check for replies
       if (message.reference) {
         const repliedMessage = await message.fetchReference();
-        if (repliedMessage.author.id !== message.author.id) {
+        if (
+          repliedMessage.author.id !== message.author.id &&
+          !repliedMessage.author.bot
+        ) {
           try {
             recordBonus(
               message.author.id,
@@ -65,7 +68,7 @@ export default {
 
       // Process user mentions
       for (const mentionedUser of userMentions.values()) {
-        if (mentionedUser.id !== message.author.id) {
+        if (mentionedUser.id !== message.author.id && !mentionedUser.bot) {
           try {
             recordBonus(message.author.id, mentionedUser.id, message.id);
             logger.info(
@@ -83,7 +86,9 @@ export default {
       for (const role of roleMentions.values()) {
         const membersWithRole = message.guild?.members.cache.filter(
           (member) =>
-            member.roles.cache.has(role.id) && member.id !== message.author.id
+            member.roles.cache.has(role.id) &&
+            member.id !== message.author.id &&
+            !member.user.bot
         );
 
         membersWithRole?.forEach(async (member) => {
