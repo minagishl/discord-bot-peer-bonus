@@ -9,7 +9,10 @@ export default {
     if (message.author.bot) return;
 
     // Handle weekly stats request
-    if (message.mentions.has(message.client.user)) {
+    if (
+      message.mentions.has(message.client.user) &&
+      !message.mentions.everyone
+    ) {
       // Check if user has administrator permission
       const member = message.member;
       if (member?.permissions.has(PermissionFlagsBits.Administrator)) {
