@@ -1,30 +1,11 @@
-import { Message, PermissionFlagsBits } from "discord.js";
-import { recordBonus, getWeeklyStats } from "../db";
-import { generateWeeklyReport } from "../utils/generateWeeklyReport";
+import { Message } from "discord.js";
+import { recordBonus } from "../db";
 import logger from "../utils/logger";
 
 export default {
   name: "messageCreate",
   async execute(message: Message) {
     if (message.author.bot) return;
-
-    // Handle weekly stats request
-    if (
-      message.mentions.has(message.client.user) &&
-      !message.mentions.everyone
-    ) {
-      // Check if user has administrator permission
-      const member = message.member;
-      if (member?.permissions.has(PermissionFlagsBits.Administrator)) {
-        const stats = getWeeklyStats();
-
-        // Generate and send report as DM
-        const reportMessage = await generateWeeklyReport(message.client, stats);
-        await message.author.send(reportMessage);
-        await message.reply("ウィークリーレポートをDMで送信しました！");
-        return;
-      }
-    }
 
     if (message.content.includes(":nare_coin:")) {
       const userMentions = message.mentions.users;
@@ -41,7 +22,8 @@ export default {
             recordBonus(
               message.author.id,
               repliedMessage.author.id,
-              message.id
+              message.id,
+              message.guildId ?? "DM"
             );
             await message.reply(`<@${message.author.id}> さん記録しました！`);
             logger.info(
@@ -73,7 +55,12 @@ export default {
       for (const mentionedUser of userMentions.values()) {
         if (mentionedUser.id !== message.author.id && !mentionedUser.bot) {
           try {
-            recordBonus(message.author.id, mentionedUser.id, message.id);
+            recordBonus(
+              message.author.id,
+              mentionedUser.id,
+              message.id,
+              message.guildId ?? "DM"
+            );
             logger.info(
               message.author.id,
               `Recorded bonus from ${message.author.username} to ${mentionedUser.username}`
@@ -96,7 +83,12 @@ export default {
 
         membersWithRole?.forEach(async (member) => {
           try {
-            recordBonus(message.author.id, member.id, message.id);
+            recordBonus(
+              message.author.id,
+              member.id,
+              message.id,
+              message.guildId ?? "DM"
+            );
             logger.info(
               message.author.id,
               `Recorded bonus from ${message.author.username} to ${member.user.username} (role: ${role.name})`
