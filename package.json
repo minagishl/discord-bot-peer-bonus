@@ -55,7 +55,10 @@
   "packageManager": "pnpm@10.5.1",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "@biomejs/biome",
+      "esbuild",
+      "better-sqlite3",
+      "lzo"
     ]
   }
 }
