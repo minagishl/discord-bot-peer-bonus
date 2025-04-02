@@ -121,6 +121,14 @@ interface GuildWeeklyChannel {
   weekly_channel_id: string;
 }
 
+// Get all guilds from peer_bonus table
+export function getAllGuilds(): string[] {
+  const rows = db
+    .prepare("SELECT DISTINCT guild_id FROM peer_bonus")
+    .all() as Array<{ guild_id: string }>;
+  return rows.map((row) => row.guild_id);
+}
+
 export function getGuildsWithWeeklyChannel(): GuildWeeklyChannel[] {
   return db
     .prepare(
