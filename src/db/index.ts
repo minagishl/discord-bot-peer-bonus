@@ -167,3 +167,15 @@ export function resetWeeklyStats() {
     console.error(`Error resetting weekly stats and coins: ${error}`);
   }
 }
+
+export function resetGuildCoins(guildId: string) {
+  try {
+    db.prepare(
+      "UPDATE coins SET amount = 0, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?"
+    ).run(guildId);
+    console.log(`Coins reset for guild ${guildId}`);
+  } catch (error) {
+    console.error(`Error resetting coins for guild ${guildId}: ${error}`);
+    throw error;
+  }
+}
