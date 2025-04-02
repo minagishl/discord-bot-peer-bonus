@@ -1,6 +1,6 @@
 import path from "node:path";
 // Import the required packages
-import { Client, GatewayIntentBits, Partials } from "discord.js";
+import { Client, Collection, Partials, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import getFiles from "~/utils/getFiles";
 import keepAlive from "./utils/keepAlive";
@@ -26,6 +26,34 @@ const client: Client = new Client({
   ],
   partials: [Partials.Channel],
 });
+
+async function loadCommands(): Promise<void> {
+  // Get all the command files
+  const commandFiles = await getFiles(path.join(__dirname, "/commands"));
+
+  const commands: any[] = await Promise.all(
+    commandFiles.map(async (file) => {
+      // Import the command file
+      const { default: command } = await import(file);
+      // Check if the command has the required "data" and "execute" properties
+      if ("data" in command && "execute" in command) {
+        return [command.data.name, command];
+      } else {
+        console.error(
+          `${file} command does not have the required "data" or "execute" properties.`
+        );
+        return undefined;
+      }
+    })
+  );
+
+  // Add the commands to the client.commands collection
+  client.commands = new Collection(
+    commands
+      .filter((command) => command !== null)
+      .map(([name, command]) => [name, command])
+  );
+}
 
 /**
  * Get all the event files and register them with the client.
@@ -68,13 +96,13 @@ client.login(process.env.TOKEN).catch((err: any) => {
   console.error(new Error(`Failed to login ${err}`));
 });
 
-// Load events
-Promise.all([loadEvents()])
+// Load commands and events
+Promise.all([loadCommands(), loadEvents()])
   .then(() => {
-    // Log a success message when the events are loaded.
-    console.log("Successfully loaded events.");
+    // Log a success message when the commands and events are loaded.
+    console.log("Successfully loaded commands and events.");
   })
   .catch((err: any) => {
-    // Log an error if the events fail to load.
-    console.error(new Error(`Failed to load events:\n${err}`));
+    // Log an error if the commands and events fail to load.
+    console.error(new Error(`Failed to load commands and events:\n${err}`));
   });
