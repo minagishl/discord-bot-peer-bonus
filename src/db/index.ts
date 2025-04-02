@@ -1,4 +1,11 @@
 import Database from "better-sqlite3";
+import fs from "node:fs";
+
+// Ensure data directory exists
+const dbDir = "data";
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir);
+}
 
 // Initialize database
 const db = new Database("data/peer-bonus.db");
