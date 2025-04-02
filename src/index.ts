@@ -1,6 +1,7 @@
 import path from "node:path";
 // Import the required packages
 import { Client, Collection, Partials, GatewayIntentBits } from "discord.js";
+import type { SlashCommand } from "./@types/commands";
 import dotenv from "dotenv";
 import getFiles from "~/utils/getFiles";
 import keepAlive from "./utils/keepAlive";
@@ -28,31 +29,32 @@ const client: Client = new Client({
 });
 
 async function loadCommands(): Promise<void> {
+  // Initialize the commands collection
+  client.commands = new Collection<string, SlashCommand>();
+
   // Get all the command files
   const commandFiles = await getFiles(path.join(__dirname, "/commands"));
 
-  const commands: any[] = await Promise.all(
-    commandFiles.map(async (file) => {
+  for (const file of commandFiles) {
+    try {
       // Import the command file
-      const { default: command } = await import(file);
+      const { default: command } = (await import(file)) as {
+        default: SlashCommand;
+      };
+
       // Check if the command has the required "data" and "execute" properties
       if ("data" in command && "execute" in command) {
-        return [command.data.name, command];
+        client.commands.set(command.data.name, command);
+        console.log(`Loaded command: ${command.data.name}`);
       } else {
         console.error(
-          `${file} command does not have the required "data" or "execute" properties.`
+          `[WARNING] The command at ${file} is missing required "data" or "execute" property.`
         );
-        return undefined;
       }
-    })
-  );
-
-  // Add the commands to the client.commands collection
-  client.commands = new Collection(
-    commands
-      .filter((command) => command !== null)
-      .map(([name, command]) => [name, command])
-  );
+    } catch (error) {
+      console.error(`[ERROR] Failed to load command at ${file}:`, error);
+    }
+  }
 }
 
 /**
