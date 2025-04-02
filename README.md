@@ -12,7 +12,7 @@ The Peer Bonus Discord Bot implemented by the Knowledge Base Executive Committee
 ## Prerequisites
 
 - Node.js (see `.nvmrc` for version)
-- Yarn package manager
+- pnpm (version 10 or higher)
 - Discord Bot Token and Client ID
 
 ## Installation
@@ -27,7 +27,7 @@ cd discord-bot-peer-bonus
 2. Install dependencies:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -48,20 +48,20 @@ EMOJI_ID='YOUR_NARE_COIN_EMOJI_ID'
 4. Register slash commands:
 
 ```bash
-yarn register
+pnpm register
 ```
 
 5. Build and start the bot:
 
 ```bash
-yarn build
-yarn start
+pnpm build
+pnpm start
 ```
 
 For development:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 ## Available Commands
@@ -74,10 +74,10 @@ yarn dev
 
 ## Development Scripts
 
-- `yarn start` - Start the bot
-- `yarn build` - Build the project
-- `yarn dev` - Run in development mode
-- `yarn format` - Format code
+- `pnpm start` - Start the bot
+- `pnpm build` - Build the project
+- `pnpm dev` - Run in development mode
+- `pnpm format` - Format code
 
 ## License
 

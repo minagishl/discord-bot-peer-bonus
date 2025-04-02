@@ -4,20 +4,23 @@ FROM node:20
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
+# Copy package.json and pnpm-lock.yaml to the container
+COPY package.json pnpm-lock.yaml ./
+
+# Install pnpm globally
+RUN npm install -g pnpm
 
 # Install app dependencies
-RUN yarn install
+RUN pnpm install
 
 # Copy the rest of the application code to the container
 COPY . .
 
 # Building the app
-RUN yarn run build
+RUN pnpm build
 
 # Expose port 3000 for the app to listen on
 EXPOSE 3000
 
 # Start the app
-CMD ["yarn", "start"]
+CMD ["pnpm", "start"]

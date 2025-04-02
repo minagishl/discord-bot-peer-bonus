@@ -6,9 +6,9 @@
   "author": "minagishl",
   "type": "commonjs",
   "scripts": {
-    "build": "yarn rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "pnpm rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "tsx src/index.ts",
-    "esbuild": "yarn rm && node scripts/build.js",
+    "esbuild": "pnpm rm && node scripts/build.js",
     "check": "biome check ./src",
     "check:write": "biome check --write ./src",
     "format": "biome format ./src",
@@ -23,8 +23,8 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "yarn lint:fix",
-      "yarn format"
+      "pnpm lint:fix",
+      "pnpm format"
     ]
   },
   "dependencies": {
@@ -52,5 +52,5 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "pnpm@10.5.1"
 }
