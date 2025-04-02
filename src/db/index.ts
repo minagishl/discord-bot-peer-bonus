@@ -20,15 +20,6 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
-
-  CREATE TABLE IF NOT EXISTS coins (
-    user_id TEXT NOT NULL,
-    guild_id TEXT NOT NULL,
-    amount INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, guild_id)
-  );
 `);
 
 export function recordBonus(
@@ -46,10 +37,6 @@ export function recordBonus(
 // Server settings functions
 interface ServerSettings {
   weekly_channel_id: string;
-}
-
-interface CoinBalance {
-  amount: number;
 }
 
 export function getWeeklyChannel(guildId: string): string | null {
@@ -71,33 +58,12 @@ export function setWeeklyChannel(guildId: string, channelId: string): void {
 
 // Coin management functions
 export function getCoins(userId: string, guildId: string): number {
-  const row = db
-    .prepare("SELECT amount FROM coins WHERE user_id = ? AND guild_id = ?")
-    .get(userId, guildId) as CoinBalance | undefined;
-  return row ? row.amount : 0;
-}
-
-export function setCoins(
-  userId: string,
-  guildId: string,
-  amount: number
-): void {
-  const stmt = db.prepare(`
-    INSERT INTO coins (user_id, guild_id, amount)
-    VALUES (?, ?, ?)
-    ON CONFLICT(user_id, guild_id)
-    DO UPDATE SET amount = ?, updated_at = CURRENT_TIMESTAMP
-  `);
-  stmt.run(userId, guildId, amount, amount);
-}
-
-export function addCoins(
-  userId: string,
-  guildId: string,
-  amount: number
-): void {
-  const currentAmount = getCoins(userId, guildId);
-  setCoins(userId, guildId, currentAmount + amount);
+  const receivedCount = db
+    .prepare(
+      "SELECT COUNT(*) as count FROM peer_bonus WHERE receiver_id = ? AND guild_id = ?"
+    )
+    .get(userId, guildId) as { count: number };
+  return receivedCount.count;
 }
 
 export interface StatRecord {
@@ -160,7 +126,6 @@ export function resetWeeklyStats() {
   try {
     db.exec(`
       DELETE FROM peer_bonus;
-      UPDATE coins SET amount = 0, updated_at = CURRENT_TIMESTAMP;
     `);
     console.log("Weekly stats and coins have been reset");
   } catch (error) {
@@ -170,12 +135,12 @@ export function resetWeeklyStats() {
 
 export function resetGuildCoins(guildId: string) {
   try {
-    db.prepare(
-      "UPDATE coins SET amount = 0, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?"
-    ).run(guildId);
-    console.log(`Coins reset for guild ${guildId}`);
+    db.prepare("DELETE FROM peer_bonus WHERE guild_id = ?").run(guildId);
+    console.log(`Peer bonus records reset for guild ${guildId}`);
   } catch (error) {
-    console.error(`Error resetting coins for guild ${guildId}: ${error}`);
+    console.error(
+      `Error resetting peer bonus records for guild ${guildId}: ${error}`
+    );
     throw error;
   }
 }
