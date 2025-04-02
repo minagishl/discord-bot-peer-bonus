@@ -156,15 +156,14 @@ export function getGuildsWithWeeklyChannel(): GuildWeeklyChannel[] {
     .all() as GuildWeeklyChannel[];
 }
 
-export function resetDatabase() {
+export function resetWeeklyStats() {
   try {
     db.exec(`
       DELETE FROM peer_bonus;
-      DELETE FROM server_settings;
-      DELETE FROM coins;
+      UPDATE coins SET amount = 0, updated_at = CURRENT_TIMESTAMP;
     `);
-    console.log("Database has been reset");
+    console.log("Weekly stats and coins have been reset");
   } catch (error) {
-    console.error(`Error resetting database: ${error}`);
+    console.error(`Error resetting weekly stats and coins: ${error}`);
   }
 }

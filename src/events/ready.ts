@@ -2,7 +2,7 @@ import { Client, TextChannel } from "discord.js";
 import cron from "node-cron";
 import {
   getWeeklyStats,
-  resetDatabase,
+  resetWeeklyStats,
   getGuildsWithWeeklyChannel,
 } from "../db";
 import { generateWeeklyReport } from "../utils/generateWeeklyReport";
@@ -51,9 +51,9 @@ async function postWeeklyStats(client: Client) {
       }
     }
 
-    // Reset the database after processing all guilds
-    resetDatabase();
-    console.log("Database has been reset");
+    // Reset weekly stats and coins after processing all guilds
+    resetWeeklyStats();
+    console.log("Weekly stats and coins have been reset");
   } catch (error) {
     console.error(`Error in weekly stats routine: ${error}`);
   }
