@@ -6,9 +6,9 @@
   "author": "minagishl",
   "type": "commonjs",
   "scripts": {
-    "build": "pnpm rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "pnpm run rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "tsx src/index.ts",
-    "esbuild": "pnpm rm && node scripts/build.js",
+    "esbuild": "pnpm run rm && node scripts/build.js",
     "check": "biome check ./src",
     "check:write": "biome check --write ./src",
     "format": "biome format ./src",
