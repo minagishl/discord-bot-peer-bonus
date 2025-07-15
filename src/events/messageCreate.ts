@@ -7,7 +7,7 @@ export default {
   async execute(message: Message) {
     if (message.author.bot) return;
 
-    if (message.content.includes(":nare_coin:")) {
+    if (/:[a-zA-Z0-9_]+_coin:/.test(message.content)) {
       const userMentions = message.mentions.users;
       const roleMentions = message.mentions.roles;
 
