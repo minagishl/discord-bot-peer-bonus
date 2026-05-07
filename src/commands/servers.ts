@@ -8,11 +8,9 @@ export default {
   async execute(interaction: ChatInputCommandInteraction) {
     const serverCount = interaction.client.guilds.cache.size;
 
-    const response = [
-      `📊 **サーバー参加状況**`,
-      ``,
-      `🏠 参加サーバー数：${serverCount}`,
-    ].join("\n");
+    const response = [`📊 **サーバー参加状況**`, ``, `🏠 参加サーバー数：${serverCount}`].join(
+      "\n",
+    );
 
     await interaction.reply({
       content: response,

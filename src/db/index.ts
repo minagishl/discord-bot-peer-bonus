@@ -33,10 +33,10 @@ export function recordBonus(
   senderId: string,
   receiverId: string,
   messageId: string,
-  guildId: string
+  guildId: string,
 ) {
   const stmt = db.prepare(
-    "INSERT INTO peer_bonus (sender_id, receiver_id, message_id, guild_id) VALUES (?, ?, ?, ?)"
+    "INSERT INTO peer_bonus (sender_id, receiver_id, message_id, guild_id) VALUES (?, ?, ?, ?)",
   );
   stmt.run(senderId, receiverId, messageId, guildId);
 }
@@ -66,9 +66,7 @@ export function setWeeklyChannel(guildId: string, channelId: string): void {
 // Coin management functions
 export function getCoins(userId: string, guildId: string): number {
   const receivedCount = db
-    .prepare(
-      "SELECT COUNT(*) as count FROM peer_bonus WHERE receiver_id = ? AND guild_id = ?"
-    )
+    .prepare("SELECT COUNT(*) as count FROM peer_bonus WHERE receiver_id = ? AND guild_id = ?")
     .get(userId, guildId) as { count: number };
   return receivedCount.count;
 }
@@ -92,7 +90,7 @@ export function getWeeklyStats(guildId: string): {
       AND guild_id = ?
       GROUP BY receiver_id
       ORDER BY count DESC
-    `
+    `,
     )
     .all(guildId);
 
@@ -105,7 +103,7 @@ export function getWeeklyStats(guildId: string): {
       AND guild_id = ?
       GROUP BY sender_id
       ORDER BY count DESC
-    `
+    `,
     )
     .all(guildId);
 
@@ -123,16 +121,16 @@ interface GuildWeeklyChannel {
 
 // Get all guilds from peer_bonus table
 export function getAllGuilds(): string[] {
-  const rows = db
-    .prepare("SELECT DISTINCT guild_id FROM peer_bonus")
-    .all() as Array<{ guild_id: string }>;
+  const rows = db.prepare("SELECT DISTINCT guild_id FROM peer_bonus").all() as Array<{
+    guild_id: string;
+  }>;
   return rows.map((row) => row.guild_id);
 }
 
 export function getGuildsWithWeeklyChannel(): GuildWeeklyChannel[] {
   return db
     .prepare(
-      "SELECT guild_id, weekly_channel_id FROM server_settings WHERE weekly_channel_id IS NOT NULL"
+      "SELECT guild_id, weekly_channel_id FROM server_settings WHERE weekly_channel_id IS NOT NULL",
     )
     .all() as GuildWeeklyChannel[];
 }
@@ -153,9 +151,7 @@ export function resetGuildCoins(guildId: string) {
     db.prepare("DELETE FROM peer_bonus WHERE guild_id = ?").run(guildId);
     console.log(`Peer bonus records reset for guild ${guildId}`);
   } catch (error) {
-    console.error(
-      `Error resetting peer bonus records for guild ${guildId}: ${error}`
-    );
+    console.error(`Error resetting peer bonus records for guild ${guildId}: ${error}`);
     throw error;
   }
 }

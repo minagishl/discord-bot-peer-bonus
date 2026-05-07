@@ -1,11 +1,11 @@
-const { build } = require('esbuild');
-const glob = require('glob');
-const entryPoints = glob.sync('./src/**/*.ts');
+const { build } = require("esbuild");
+const glob = require("glob");
+const entryPoints = glob.sync("./src/**/*.ts");
 
 const config = {
   entryPoints,
-  outdir: './dist',
-  platform: 'node',
+  outdir: "./dist",
+  platform: "node",
   minify: true,
 };
 

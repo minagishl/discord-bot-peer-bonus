@@ -11,7 +11,7 @@ export default {
     if (!command) {
       logger.error(
         interaction.user.id,
-        `No command matching ${interaction.commandName} was found.`
+        `No command matching ${interaction.commandName} was found.`,
       );
       return;
     }
@@ -19,10 +19,7 @@ export default {
     try {
       await command.execute(interaction);
     } catch (error) {
-      logger.error(
-        interaction.user.id,
-        `Error executing ${interaction.commandName}`
-      );
+      logger.error(interaction.user.id, `Error executing ${interaction.commandName}`);
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({
           content: "コマンドの実行中にエラーが発生しました。",

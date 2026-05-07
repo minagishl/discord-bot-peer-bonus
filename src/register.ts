@@ -1,8 +1,5 @@
 import path from "node:path";
-import type {
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-} from "discord.js";
+import type { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 import getFile from "~/utils/getFiles";
@@ -34,19 +31,12 @@ const deployCommands = async (): Promise<void> => {
 
     const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
-    console.log(
-      `Started refreshing ${commands.length} application (/) commands.`
-    );
-    const data = await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID),
-      {
-        body: commands,
-      }
-    );
+    console.log(`Started refreshing ${commands.length} application (/) commands.`);
+    const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+      body: commands,
+    });
 
-    console.log(
-      `Successfully reloaded ${Array(data).length} application (/) commands.`
-    );
+    console.log(`Successfully reloaded ${Array(data).length} application (/) commands.`);
   } catch (err: unknown) {
     console.error(new Error(`An error has occurred: ${String(err)}`));
   }

@@ -6,7 +6,7 @@ export async function generateWeeklyReport(
   stats: {
     receiveStats: StatRecord[];
     giveStats: StatRecord[];
-  }
+  },
 ): Promise<string> {
   // Cache for usernames to avoid duplicate fetches
   const userCache = new Map<string, string>();
@@ -37,23 +37,19 @@ export async function generateWeeklyReport(
   const receiveRanking = await Promise.all(
     stats.receiveStats.map(async (stat, index) => {
       const username = await getUsername(stat.receiver_id);
-      return `${index + 1}位: ${username} さん（ <:nare_coin:${emojiId}> ✕ ${
-        stat.count
-      }）`;
-    })
+      return `${index + 1}位: ${username} さん（ <:nare_coin:${emojiId}> ✕ ${stat.count}）`;
+    }),
   );
 
   // Format give stats
   const giveRanking = await Promise.all(
     stats.giveStats.map(async (stat, index) => {
       const username = await getUsername(stat.sender_id);
-      return `${index + 1}位: ${username} さん（ <:nare_coin:${emojiId}> ✕ ${
-        stat.count
-      }）`;
-    })
+      return `${index + 1}位: ${username} さん（ <:nare_coin:${emojiId}> ✕ ${stat.count}）`;
+    }),
   );
 
   return `==今週のreceiveAward==\n${receiveRanking.join(
-    "\n"
+    "\n",
   )}\n\n==今週のgiveAward==\n${giveRanking.join("\n")}`;
 }

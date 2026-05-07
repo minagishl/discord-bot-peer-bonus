@@ -1,11 +1,6 @@
 import { Client, TextChannel } from "discord.js";
 import cron from "node-cron";
-import {
-  getWeeklyStats,
-  resetWeeklyStats,
-  getAllGuilds,
-  getWeeklyChannel,
-} from "../db";
+import { getWeeklyStats, resetWeeklyStats, getAllGuilds, getWeeklyChannel } from "../db";
 import { generateWeeklyReport } from "../utils/generateWeeklyReport";
 
 async function postWeeklyStats(client: Client) {
@@ -27,7 +22,7 @@ async function postWeeklyStats(client: Client) {
             targetChannel = channel;
           } else {
             console.warn(
-              `Weekly channel ${weeklyChannelId} for guild ${guildId} is not a text channel`
+              `Weekly channel ${weeklyChannelId} for guild ${guildId} is not a text channel`,
             );
           }
         }
@@ -44,13 +39,11 @@ async function postWeeklyStats(client: Client) {
         try {
           // Create main message and thread
           const mainMessage = await targetChannel.send(
-            "こんにちは！\n今週も皆さんお疲れ様でした :tada:\n\n今週のピアボーナスの結果をスレッドに投稿しました！\nご覧ください！"
+            "こんにちは！\n今週も皆さんお疲れ様でした :tada:\n\n今週のピアボーナスの結果をスレッドに投稿しました！\nご覧ください！",
           );
 
           const thread = await mainMessage.startThread({
-            name: `週間ピアボーナスレポート ${new Date().toLocaleDateString(
-              "ja-JP"
-            )}`,
+            name: `週間ピアボーナスレポート ${new Date().toLocaleDateString("ja-JP")}`,
           });
 
           // Get statistics and generate report for this guild
@@ -63,12 +56,10 @@ async function postWeeklyStats(client: Client) {
           // Lock the thread
           await thread.setLocked(true);
 
-          console.log(
-            `Weekly stats posted for guild ${guildId} in channel ${targetChannel.name}`
-          );
+          console.log(`Weekly stats posted for guild ${guildId} in channel ${targetChannel.name}`);
         } catch (error) {
           console.error(
-            `Error posting weekly stats for guild ${guildId} in channel ${targetChannel.name}: ${error}`
+            `Error posting weekly stats for guild ${guildId} in channel ${targetChannel.name}: ${error}`,
           );
         }
       } catch (error) {
@@ -98,7 +89,7 @@ export default {
       },
       {
         timezone: "Asia/Tokyo",
-      }
+      },
     );
   },
 };

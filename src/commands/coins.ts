@@ -2,9 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { getCoins } from "../db";
 
 export default {
-  data: new SlashCommandBuilder()
-    .setName("coins")
-    .setDescription("現在のコイン残高を表示します"),
+  data: new SlashCommandBuilder().setName("coins").setDescription("現在のコイン残高を表示します"),
 
   async execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {

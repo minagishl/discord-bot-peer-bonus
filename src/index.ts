@@ -47,7 +47,7 @@ async function loadCommands(): Promise<void> {
         client.commands.set(command.data.name, command);
       } else {
         console.error(
-          `[WARNING] The command at ${file} is missing required "data" or "execute" property.`
+          `[WARNING] The command at ${file} is missing required "data" or "execute" property.`,
         );
       }
     } catch (error) {
@@ -76,12 +76,9 @@ async function loadEvents(): Promise<void> {
           { once: true },
         ] as EventType;
       } else {
-        return [
-          event.name,
-          (...args: any[]) => event.execute(...args),
-        ] as EventType;
+        return [event.name, (...args: any[]) => event.execute(...args)] as EventType;
       }
-    })
+    }),
   );
 
   events.forEach((event: EventType) => {

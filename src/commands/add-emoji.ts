@@ -1,8 +1,4 @@
-import {
-  ChatInputCommandInteraction,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
-} from "discord.js";
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 
 export default {
   data: new SlashCommandBuilder()
@@ -32,9 +28,7 @@ export default {
 
     try {
       // Check if the emoji already exists
-      const existingEmoji = interaction.guild.emojis.cache.find(
-        (emoji) => emoji.name === name
-      );
+      const existingEmoji = interaction.guild.emojis.cache.find((emoji) => emoji.name === name);
 
       if (existingEmoji) {
         await interaction.reply({

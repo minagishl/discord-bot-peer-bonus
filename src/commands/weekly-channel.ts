@@ -20,11 +20,11 @@ export default {
             .setName("channel")
             .setDescription("週次メッセージを送信するチャンネル")
             .setRequired(true)
-            .addChannelTypes(ChannelType.GuildText)
-        )
+            .addChannelTypes(ChannelType.GuildText),
+        ),
     )
     .addSubcommand((subcommand) =>
-      subcommand.setName("show").setDescription("現在の設定を表示します")
+      subcommand.setName("show").setDescription("現在の設定を表示します"),
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {

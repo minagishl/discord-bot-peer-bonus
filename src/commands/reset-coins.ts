@@ -1,8 +1,4 @@
-import {
-  ChatInputCommandInteraction,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
-} from "discord.js";
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { resetGuildCoins } from "../db";
 
 export default {
@@ -28,10 +24,7 @@ export default {
         ephemeral: true,
       });
     } catch (error) {
-      console.error(
-        `Failed to reset coins for guild ${interaction.guild.id}:`,
-        error
-      );
+      console.error(`Failed to reset coins for guild ${interaction.guild.id}:`, error);
       await interaction.reply({
         content: "コインのリセット中にエラーが発生しました。",
         ephemeral: true,

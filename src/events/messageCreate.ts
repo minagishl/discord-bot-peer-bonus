@@ -14,21 +14,18 @@ export default {
       // Check for replies
       if (message.reference) {
         const repliedMessage = await message.fetchReference();
-        if (
-          repliedMessage.author.id !== message.author.id &&
-          !repliedMessage.author.bot
-        ) {
+        if (repliedMessage.author.id !== message.author.id && !repliedMessage.author.bot) {
           try {
             recordBonus(
               message.author.id,
               repliedMessage.author.id,
               message.id,
-              message.guildId ?? "DM"
+              message.guildId ?? "DM",
             );
             await message.reply(`<@${message.author.id}> さん記録しました！`);
             logger.info(
               message.author.id,
-              `Recorded bonus from ${message.author.username} to ${repliedMessage.author.username} (via reply)`
+              `Recorded bonus from ${message.author.username} to ${repliedMessage.author.username} (via reply)`,
             );
           } catch (error) {
             logger.error(message.author.id, `Failed to record bonus: ${error}`);
@@ -40,9 +37,7 @@ export default {
       // Check for self-mention or no mentions
       if (
         (userMentions.size === 0 && roleMentions.size === 0) ||
-        (userMentions.size === 1 &&
-          roleMentions.size === 0 &&
-          userMentions.has(message.author.id))
+        (userMentions.size === 1 && roleMentions.size === 0 && userMentions.has(message.author.id))
       ) {
         await message.reply("あれなんかおかしいぞ、もう一度試してみよう！");
         return;
@@ -55,15 +50,10 @@ export default {
       for (const mentionedUser of userMentions.values()) {
         if (mentionedUser.id !== message.author.id && !mentionedUser.bot) {
           try {
-            recordBonus(
-              message.author.id,
-              mentionedUser.id,
-              message.id,
-              message.guildId ?? "DM"
-            );
+            recordBonus(message.author.id, mentionedUser.id, message.id, message.guildId ?? "DM");
             logger.info(
               message.author.id,
-              `Recorded bonus from ${message.author.username} to ${mentionedUser.username}`
+              `Recorded bonus from ${message.author.username} to ${mentionedUser.username}`,
             );
             validMentionsProcessed = true;
           } catch (error) {
@@ -76,35 +66,25 @@ export default {
       for (const role of roleMentions.values()) {
         const membersWithRole = message.guild?.members.cache.filter(
           (member) =>
-            member.roles.cache.has(role.id) &&
-            member.id !== message.author.id &&
-            !member.user.bot
+            member.roles.cache.has(role.id) && member.id !== message.author.id && !member.user.bot,
         );
 
         membersWithRole?.forEach(async (member) => {
           try {
-            recordBonus(
-              message.author.id,
-              member.id,
-              message.id,
-              message.guildId ?? "DM"
-            );
+            recordBonus(message.author.id, member.id, message.id, message.guildId ?? "DM");
             logger.info(
               message.author.id,
-              `Recorded bonus from ${message.author.username} to ${member.user.username} (role: ${role.name})`
+              `Recorded bonus from ${message.author.username} to ${member.user.username} (role: ${role.name})`,
             );
           } catch (error) {
-            logger.error(
-              message.author.id,
-              `Failed to record bonus for role member: ${error}`
-            );
+            logger.error(message.author.id, `Failed to record bonus for role member: ${error}`);
           }
         });
 
         if (membersWithRole && membersWithRole.size > 0) {
           validMentionsProcessed = true;
           await message.reply(
-            `<@${message.author.id}> さんロール ${role.name} のメンバー全員を記録しました！`
+            `<@${message.author.id}> さんロール ${role.name} のメンバー全員を記録しました！`,
           );
         }
       }

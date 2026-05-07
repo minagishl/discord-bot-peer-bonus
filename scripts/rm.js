@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const distPath = path.resolve(__dirname, '../dist');
+const distPath = path.resolve(__dirname, "../dist");
 
 // Remove dist folder
 if (fs.existsSync(distPath)) {
