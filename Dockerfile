@@ -1,26 +1,42 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20
+# Use an official Bun runtime as a parent image
+FROM oven/bun:1-debian AS base
 
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml to the container
-COPY package.json pnpm-lock.yaml ./
+# Install build dependencies for native modules in a single layer
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    ca-certificates \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Dependencies installation stage
+FROM base AS deps
+
+# Copy only package files for better caching
+COPY package.json bun.lock* ./
 
 # Install app dependencies
-RUN pnpm install
+RUN bun install
 
 # Copy the rest of the application code to the container
 COPY . .
 
-# Building the app
-RUN pnpm build
+# Build the application
+RUN bun run build
 
-# Expose port 3000 for the app to listen on
-EXPOSE 3000
+# Production stage
+FROM oven/bun:1-slim AS runner
+
+WORKDIR /app
+
+# Copy only necessary files from deps stage
+COPY --from=deps /app/dist ./dist
+COPY --from=deps /app/package.json ./
+COPY --from=deps /app/node_modules ./node_modules
 
 # Start the app
-CMD ["pnpm", "start"]
+CMD ["bun", "start"]

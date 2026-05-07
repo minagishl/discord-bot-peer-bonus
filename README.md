@@ -12,7 +12,7 @@ The Peer Bonus Discord Bot implemented by the Knowledge Base Executive Committee
 ## Prerequisites
 
 - Node.js (see `.nvmrc` for version)
-- pnpm (version 10 or higher)
+- Bun (latest stable version)
 - Discord Bot Token and Client ID
 
 ## Installation
@@ -27,7 +27,7 @@ cd discord-bot-peer-bonus
 2. Install dependencies:
 
 ```bash
-pnpm install
+bun install
 ```
 
 3. Set up environment variables:
@@ -48,20 +48,20 @@ EMOJI_ID='YOUR_NARE_COIN_EMOJI_ID'
 4. Register slash commands:
 
 ```bash
-pnpm register
+bun run register
 ```
 
 5. Build and start the bot:
 
 ```bash
-pnpm build
-pnpm start
+bun run build
+bun run start
 ```
 
 For development:
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 ## Available Commands
@@ -74,10 +74,10 @@ pnpm dev
 
 ## Development Scripts
 
-- `pnpm start` - Start the bot
-- `pnpm build` - Build the project
-- `pnpm dev` - Run in development mode
-- `pnpm format` - Format code
+- `bun run start` - Start the bot
+- `bun run build` - Build the project
+- `bun run dev` - Run in development mode
+- `bun run format` - Format code
 
 ## License
 
