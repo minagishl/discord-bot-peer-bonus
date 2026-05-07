@@ -77,7 +77,12 @@ bun run dev
 - `bun run start` - Start the bot
 - `bun run build` - Build the project
 - `bun run dev` - Run in development mode
-- `bun run format` - Format code
+- `bun run lint` - Run linter (`oxlint`)
+- `bun run lint:fix` - Run linter with auto-fix
+- `bun run format` - Format code (`oxfmt`)
+- `bun run format:check` - Check formatting only
+- `bun run check` - Run lint and format checks
+- `bun run check:write` - Apply lint fixes and formatting
 
 ## License
 

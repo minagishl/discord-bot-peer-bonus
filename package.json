@@ -6,24 +6,19 @@
   "author": "minagishl",
   "type": "commonjs",
   "scripts": {
-    "build": "pnpm run rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "bun run rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "tsx src/index.ts",
-    "esbuild": "pnpm run rm && node scripts/build.js",
-    "check": "biome check ./src",
-    "check:write": "biome check --write ./src",
-    "format": "biome format ./src",
-    "format:write": "biome format --write ./src",
-    "lint": "biome lint ./src",
+    "esbuild": "bun run rm && node scripts/build.js",
+    "check": "bun run lint && bun run format:check",
+    "check:write": "bun run lint:fix && bun run format",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint ./src",
+    "lint:fix": "oxlint --fix ./src",
     "register": "tsx src/register.ts",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "rm": "node scripts/rm.js"
-  },
-  "lint-staged": {
-    "*.{js,ts}": [
-      "pnpm lint:fix",
-      "pnpm format"
-    ]
   },
   "dependencies": {
     "@types/express": "^5.0.6",
@@ -34,7 +29,6 @@
     "node-cron": "^4.2.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.14",
     "@commitlint/cli": "^20.5.3",
     "@commitlint/config-conventional": "^20.5.3",
     "@types/better-sqlite3": "^7.6.13",
@@ -42,8 +36,16 @@
     "@types/node-cron": "^3.0.11",
     "esbuild": "^0.28.0",
     "lint-staged": "^17.0.2",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
     "tsc-alias": "^1.8.17",
     "tsx": "^4.21.0",
     "typescript": "6.0.3"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "bun run lint:fix",
+      "bun run format"
+    ]
   }
 }
