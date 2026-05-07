@@ -79,8 +79,8 @@ bun run dev
 - `bun run dev` - Run in development mode
 - `bun run lint` - Run linter (`oxlint`)
 - `bun run lint:fix` - Run linter with auto-fix
-- `bun run format` - Format code (`oxfmt`)
-- `bun run format:check` - Check formatting only
+- `bun run fmt` - Format code (`oxfmt`)
+- `bun run fmt:check` - Check formatting only
 - `bun run check` - Run lint and format checks
 - `bun run check:write` - Apply lint fixes and formatting
 

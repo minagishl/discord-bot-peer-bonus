@@ -9,10 +9,10 @@
     "build": "bun run rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "tsx src/index.ts",
     "esbuild": "bun run rm && node scripts/build.js",
-    "check": "bun run lint && bun run format:check",
-    "check:write": "bun run lint:fix && bun run format",
-    "format": "oxfmt .",
-    "format:check": "oxfmt --check .",
+    "check": "bun run lint && bun run fmt:check",
+    "check:write": "bun run lint:fix && bun run fmt",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
     "lint": "oxlint ./src",
     "lint:fix": "oxlint --fix ./src",
     "register": "tsx src/register.ts",
@@ -45,7 +45,7 @@
   "lint-staged": {
     "*.{js,ts}": [
       "bun run lint:fix",
-      "bun run format"
+      "bun run fmt"
     ]
   }
 }
