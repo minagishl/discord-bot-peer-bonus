@@ -22,7 +22,8 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "target": "ES2019",
-    "typeRoots": ["src/@types", "node_modules/@types"],
+    "typeRoots": ["src/@types", "node_modules/@types", "node_modules"],
+    "types": ["node", "bun-types"],
     "paths": {
       "~/*": ["./src/*"]
     },

@@ -1,4 +1,4 @@
-import Database from "better-sqlite3";
+import { Database } from "bun:sqlite";
 import fs from "node:fs";
 
 // Ensure data directory exists
@@ -8,7 +8,7 @@ if (!fs.existsSync(dbDir)) {
 }
 
 // Initialize database
-const db = new Database("data/peer-bonus.db");
+const db = new Database("data/peer-bonus.db", { create: true });
 
 // Create tables if they don't exist
 db.exec(`
@@ -49,8 +49,8 @@ interface ServerSettings {
 export function getWeeklyChannel(guildId: string): string | null {
   const row = db
     .prepare("SELECT weekly_channel_id FROM server_settings WHERE guild_id = ?")
-    .get(guildId) as ServerSettings | undefined;
-  return row ? row.weekly_channel_id : null;
+    .get(guildId) as ServerSettings | null;
+  return row?.weekly_channel_id ?? null;
 }
 
 export function setWeeklyChannel(guildId: string, channelId: string): void {

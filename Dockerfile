@@ -39,4 +39,4 @@ COPY --from=deps /app/package.json ./
 COPY --from=deps /app/node_modules ./node_modules
 
 # Start the app
-CMD ["bun", "start"]
+CMD ["bun", "dist/index.js"]
