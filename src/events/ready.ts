@@ -76,7 +76,7 @@ async function postWeeklyStats(client: Client) {
 }
 
 export default {
-  name: "ready",
+  name: "clientReady",
   once: true,
   execute(client: Client) {
     console.log(`Logged in as ${client.user?.username}!`);
